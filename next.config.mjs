@@ -1,5 +1,8 @@
+import { fileURLToPath } from 'node:url';
+
 // Fonts are vendored in fonts/google so builds never depend on a live Google Fonts fetch.
-process.env.NEXT_FONT_GOOGLE_MOCKED_RESPONSES ??= new URL('./fonts/google/mock.cjs', import.meta.url).pathname;
+// fileURLToPath, not URL.pathname: on Windows .pathname gives "/F:/Rig%20Wire/..." which require() can't open.
+process.env.NEXT_FONT_GOOGLE_MOCKED_RESPONSES ??= fileURLToPath(new URL('./fonts/google/mock.cjs', import.meta.url));
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {

@@ -3,7 +3,11 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const map = require('./responses.json');
+// next/font reads a mocked font file from disk only when its URL starts with '/'; any other URL becomes the
+// file's literal bytes. A Windows dir ("F:\...") doesn't, so drop the drive letter and use forward slashes —
+// Node resolves "/Rig Wire/..." against the current drive, which is the repo's own.
+const fontDir = process.platform === 'win32' ? __dirname.replace(/^[A-Za-z]:/, '').replaceAll('\\', '/') : __dirname;
 module.exports = Object.fromEntries(Object.entries(map).map(([url, file]) => [
   url,
-  fs.readFileSync(path.join(__dirname, file), 'utf8').replaceAll('url(./', `url(${__dirname}/`),
+  fs.readFileSync(path.join(__dirname, file), 'utf8').replaceAll('url(./', `url(${fontDir}/`),
 ]));
